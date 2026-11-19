@@ -1,6 +1,4 @@
-package com.setupforge.setupforge_backend.product.dto.response;
-
-import com.setupforge.setupforge_backend.category.model.Categoria;
+package com.setupforge.setupforge_backend.produto.dto.response;
 
 import java.math.BigDecimal;
 

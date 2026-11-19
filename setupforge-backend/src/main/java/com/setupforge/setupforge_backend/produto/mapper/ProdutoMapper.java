@@ -1,8 +1,8 @@
-package com.setupforge.setupforge_backend.product.mapper;
+package com.setupforge.setupforge_backend.produto.mapper;
 
-import com.setupforge.setupforge_backend.product.dto.request.ProdutoRequest;
-import com.setupforge.setupforge_backend.product.dto.response.ProdutoResponse;
-import com.setupforge.setupforge_backend.product.model.Produto;
+import com.setupforge.setupforge_backend.produto.dto.request.ProdutoRequest;
+import com.setupforge.setupforge_backend.produto.dto.response.ProdutoResponse;
+import com.setupforge.setupforge_backend.produto.model.Produto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -17,5 +17,6 @@ public abstract class ProdutoMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "categoria", ignore = true)
+    @Mapping(target = "itensDeSetup", ignore = true)
     public abstract Produto toProduto(ProdutoRequest produtoRequest);
 }

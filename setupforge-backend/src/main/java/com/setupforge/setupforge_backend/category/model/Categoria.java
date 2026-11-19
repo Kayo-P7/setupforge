@@ -1,6 +1,6 @@
 package com.setupforge.setupforge_backend.category.model;
 
-import com.setupforge.setupforge_backend.product.model.Produto;
+import com.setupforge.setupforge_backend.produto.model.Produto;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

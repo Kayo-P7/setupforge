@@ -1,13 +1,15 @@
-package com.setupforge.setupforge_backend.product.model;
+package com.setupforge.setupforge_backend.produto.model;
 
 import com.setupforge.setupforge_backend.category.model.Categoria;
-
+import com.setupforge.setupforge_backend.setup.model.SetupProduto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "produto_tb")
@@ -38,4 +40,8 @@ public class Produto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
+
+    @OneToMany(mappedBy = "produto", fetch = FetchType.LAZY)
+    private List<SetupProduto> itensDeSetup = new ArrayList<>();
+
 }
