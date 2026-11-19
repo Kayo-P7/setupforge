@@ -16,8 +16,8 @@ public interface SetupProdutoRepository extends JpaRepository<SetupProduto, Long
     @Query("""
             SELECT COALESCE( SUM(sp.precoUnitario * sp.quantidade), 0 )
              FROM SetupProduto sp
-              WHERE sp.setup.id = : setupId 
+              WHERE sp.setup.id = :setupId 
             
             """)
-    ProdutoValorTotal produtoValorTotal(@Param("id") Long setupId);
+    ProdutoValorTotal produtoValorTotal(@Param("setupId") Long setupId);
 }
