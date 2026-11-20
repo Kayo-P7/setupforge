@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public abstract class CategoriaMappper {
 
 
-    @Mapping(target = "produtos", ignore = true)
+
     public abstract CategoriaResponse toCategoriaResponse(Categoria categoria);
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "produtos", ignore = true)

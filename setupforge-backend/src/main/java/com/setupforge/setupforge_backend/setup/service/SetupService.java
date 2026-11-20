@@ -1,6 +1,7 @@
 package com.setupforge.setupforge_backend.setup.service;
 
 
+import com.setupforge.setupforge_backend.exception.setupException.SetupNaoEncontrado;
 import com.setupforge.setupforge_backend.setup.dto.setupDTO.request.SetupRequest;
 import com.setupforge.setupforge_backend.setup.dto.setupDTO.response.SetupResponse;
 import com.setupforge.setupforge_backend.setup.mapper.SetupMapper;
@@ -39,7 +40,7 @@ public class SetupService {
     @Transactional(readOnly = true)
     public SetupResponse buscarPorId(Long id) {
         Setup setup = setupRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new SetupNaoEncontrado(
                         "Setup não encontrado: " + id
                 ));
 
@@ -49,7 +50,7 @@ public class SetupService {
     @Transactional
     public void removerSetup(Long id) {
         if (!setupRepository.existsById(id)) {
-            throw new EntityNotFoundException("Setup não encontrado: " + id);
+            throw new SetupNaoEncontrado("Setup não encontrado: " + id);
         }
 
         setupRepository.deleteById(id);

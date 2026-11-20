@@ -1,5 +1,7 @@
 package com.setupforge.setupforge_backend.setup.service;
 
+import com.setupforge.setupforge_backend.exception.produtoException.ProdutoNaoEncontrado;
+import com.setupforge.setupforge_backend.exception.setupException.SetupNaoEncontrado;
 import com.setupforge.setupforge_backend.produto.model.Produto;
 import com.setupforge.setupforge_backend.produto.repository.ProdutoRepository;
 import com.setupforge.setupforge_backend.setup.dto.setupProdutoDTO.request.SetupProdutoRequest;
@@ -31,12 +33,12 @@ public class SetupProdutoService {
     public SetupProdutoResponse adicionarProduto(SetupProdutoRequest request) {
 
         Setup setup = setupRepository.findById(request.setupId())
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new SetupNaoEncontrado(
                         "Setup não encontrado: " + request.setupId()
                 ));
 
         Produto produto = produtoRepository.findById(request.produtoId())
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new ProdutoNaoEncontrado(
                         "Produto não encontrado: " + request.produtoId()
                 ));
 
@@ -79,7 +81,7 @@ public class SetupProdutoService {
     public BigDecimal valorTotal(Long setupId) {
 
         if (!setupRepository.existsById(setupId)) {
-            throw new EntityNotFoundException("Setup não encontrado: " + setupId);
+            throw new SetupNaoEncontrado("Setup não encontrado: " + setupId);
         }
 
         return setupProdutoRepository.produtoValorTotal(setupId)
@@ -89,7 +91,7 @@ public class SetupProdutoService {
     private SetupProduto buscarItem(Long setupId, Long itemId) {
 
         return setupProdutoRepository.findByIdAndSetupId(itemId, setupId)
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new ProdutoNaoEncontrado(
                         "Produto não encontrado neste setup."
                 ));
     }
@@ -98,7 +100,7 @@ public class SetupProdutoService {
     public List<SetupProdutoResponse> listarProdutos(Long setupId) {
 
         if (!setupRepository.existsById(setupId)) {
-            throw new EntityNotFoundException(
+            throw new SetupNaoEncontrado(
                     "Setup não encontrado: " + setupId
             );
         }

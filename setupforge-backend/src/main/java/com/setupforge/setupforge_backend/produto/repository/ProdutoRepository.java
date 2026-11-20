@@ -12,7 +12,7 @@ import java.util.List;
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     @Query("""
-            SELECT p FROM Produto WHERE nome = :nome ORDER BY p.id
+            SELECT p FROM Produto p WHERE nome = :nome ORDER BY p.id
             """)
    List<Produto> buscarPeloNome(@Param("nome") String nome);
 }
