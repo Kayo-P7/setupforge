@@ -11,48 +11,54 @@ import com.setupforge.setupforge_backend.setup.model.Setup;
 import com.setupforge.setupforge_backend.setup.model.SetupProduto;
 import com.setupforge.setupforge_backend.setup.repository.SetupProdutoRepository;
 import com.setupforge.setupforge_backend.setup.repository.SetupRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class SetupService {
 
-    private final SetupProdutoRepository setupProdutoRepository;
     private final SetupRepository setupRepository;
     private final SetupMapper setupMapper;
-    private final SetupProdutoMapper setupProdutoMapper;
 
-    public SetupResponse saveSetup(SetupRequest setupRequest){
-
-        Setup setup = setupMapper.toSetup(setupRequest);
+    public SetupResponse criarSetup(SetupRequest request) {
+        Setup setup = setupMapper.toSetup(request);
 
         setupRepository.save(setup);
+
         return setupMapper.toSetupResponse(setup);
     }
 
-
-
-    @Transactional
-    public SetupProdutoResponse saveSetupProduto(SetupProdutoRequest setupProdutoRequest){
-
-        SetupProduto setupProduto = setupProdutoMapper.toSetupProduto(setupProdutoRequest);
-
-        setupProdutoRepository.save(setupProduto);
-
-        return setupProdutoMapper.tosetupProdutoResponse(setupProduto);
+    @Transactional(readOnly = true)
+    public List<SetupResponse> listarSetups() {
+        return setupRepository.findAll()
+                .stream()
+                .map(setupMapper::toSetupResponse)
+                .toList();
     }
 
-
     @Transactional(readOnly = true)
-    public BigDecimal valorTotal(Long id) {
+    public SetupResponse buscarPorId(Long id) {
+        Setup setup = setupRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Setup não encontrado: " + id
+                ));
 
-        return setupProdutoRepository
-                .produtoValorTotal(id)
-                .getValueTotal();
+        return setupMapper.toSetupResponse(setup);
+    }
+
+    @Transactional
+    public void removerSetup(Long id) {
+        if (!setupRepository.existsById(id)) {
+            throw new EntityNotFoundException("Setup não encontrado: " + id);
+        }
+
+        setupRepository.deleteById(id);
     }
 
 }

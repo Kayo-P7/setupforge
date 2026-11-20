@@ -8,7 +8,6 @@ public record SetupProdutoRequest(
 
         Long setupId,
         Long produtoId,
-        Integer quantidade,
-        BigDecimal precoUnitario
+        Integer quantidade
 ) {
 }

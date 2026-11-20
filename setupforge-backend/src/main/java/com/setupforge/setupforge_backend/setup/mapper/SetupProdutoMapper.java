@@ -13,7 +13,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import java.math.BigDecimal;
 @Mapper(componentModel = "spring")
 
 public abstract class SetupProdutoMapper {
@@ -43,7 +43,15 @@ public abstract class SetupProdutoMapper {
         setupProduto.setPrecoUnitario(setupProduto.getProduto().getPreco());
     }
 
-    public abstract SetupProdutoResponse tosetupProdutoResponse(SetupProduto setupProduto);
+    @Mapping(target = "produtoId", source = "produto.id")
+    @Mapping(target = "produtoNome", source = "produto.nome")
+    @Mapping(
+            target = "subtotal",
+            expression = "java(setupProduto.getPrecoUnitario().multiply(BigDecimal.valueOf(setupProduto.getQuantidade())))"
+    )
+    public abstract SetupProdutoResponse toSetupProdutoResponse(
+            SetupProduto setupProduto
+    );
 
 
 }
