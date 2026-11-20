@@ -8,6 +8,7 @@ import com.setupforge.setupforge_backend.category.repository.CategoriaRepository
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class CategoriaService {
     private final CategoriaRepository categoriaRepository;
     private final CategoriaMappper categoriaMappper;
 
+    @Transactional
     public CategoriaResponse save(CategoriaRequest categoriaRequest) {
         Categoria categoria = categoriaMappper.toCategoria(categoriaRequest);
 
@@ -26,6 +28,7 @@ public class CategoriaService {
         return categoriaMappper.toCategoriaResponse(categoria);
     }
 
+    @Transactional(readOnly = true)
     public List<CategoriaResponse> findAll() {
         return categoriaRepository.findAll()
                 .stream()
@@ -42,6 +45,7 @@ public class CategoriaService {
         return categoriaMappper.toCategoriaResponse(categoria);
     }
 
+    @Transactional
     public CategoriaResponse update(Long id, CategoriaRequest request) {
         Categoria categoria = categoriaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(

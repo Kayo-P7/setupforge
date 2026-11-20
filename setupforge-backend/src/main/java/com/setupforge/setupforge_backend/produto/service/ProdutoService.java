@@ -8,6 +8,7 @@ import com.setupforge.setupforge_backend.produto.dto.response.ProdutoResponse;
 import com.setupforge.setupforge_backend.produto.mapper.ProdutoMapper;
 import com.setupforge.setupforge_backend.produto.model.Produto;
 import com.setupforge.setupforge_backend.produto.repository.ProdutoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,7 @@ public class ProdutoService {
 
         Categoria categoria = categoriaRepository
                 .findById(produtoRequest.categoriaId())
-                .orElseThrow(() -> new RuntimeException("Nao foi possivele econtrar uma categoria com esse id"));
+                .orElseThrow(() -> new EntityNotFoundException("Nao foi possivel econtrar uma categoria com esse id"));
         Produto produto = produtoMapper.toProduto(produtoRequest);
 
         produto.setCategoria(categoria);
