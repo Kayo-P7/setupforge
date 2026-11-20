@@ -1,8 +1,11 @@
 package com.setupforge.setupforge_backend.setup.service;
 
+import com.setupforge.setupforge_backend.produto.model.Produto;
+import com.setupforge.setupforge_backend.produto.repository.ProdutoRepository;
 import com.setupforge.setupforge_backend.setup.dto.setupProdutoDTO.request.SetupProdutoRequest;
 import com.setupforge.setupforge_backend.setup.dto.setupProdutoDTO.response.SetupProdutoResponse;
 import com.setupforge.setupforge_backend.setup.mapper.SetupProdutoMapper;
+import com.setupforge.setupforge_backend.setup.model.Setup;
 import com.setupforge.setupforge_backend.setup.model.SetupProduto;
 import com.setupforge.setupforge_backend.setup.repository.SetupProdutoRepository;
 import com.setupforge.setupforge_backend.setup.repository.SetupRepository;
@@ -19,6 +22,7 @@ import java.util.List;
 @Service
 public class SetupProdutoService {
 
+    private final ProdutoRepository produtoRepository;
     private final SetupRepository setupRepository;
     private final SetupProdutoRepository setupProdutoRepository;
     private final SetupProdutoMapper setupProdutoMapper;
@@ -26,24 +30,27 @@ public class SetupProdutoService {
     @Transactional
     public SetupProdutoResponse adicionarProduto(SetupProdutoRequest request) {
 
-        SetupProduto setupProduto = setupProdutoMapper.toSetupProduto(request);
+        Setup setup = setupRepository.findById(request.setupId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Setup não encontrado: " + request.setupId()
+                ));
+
+        Produto produto = produtoRepository.findById(request.produtoId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Produto não encontrado: " + request.produtoId()
+                ));
+
+        SetupProduto setupProduto = setupProdutoMapper.toSetupProduto(
+                request,
+                setup,
+                produto
+        );
+
+        setup.adicionarProduto(setupProduto);
 
         setupProdutoRepository.save(setupProduto);
 
         return setupProdutoMapper.toSetupProdutoResponse(setupProduto);
-    }
-
-    @Transactional(readOnly = true)
-    public List<SetupProdutoResponse> listarProdutos(Long setupId) {
-
-        if (!setupRepository.existsById(setupId)) {
-            throw new EntityNotFoundException("Setup não encontrado: " + setupId);
-        }
-
-        return setupProdutoRepository.findBySetupId(setupId)
-                .stream()
-                .map(setupProdutoMapper::toSetupProdutoResponse)
-                .toList();
     }
 
     @Transactional
@@ -65,7 +72,7 @@ public class SetupProdutoService {
 
         SetupProduto item = buscarItem(setupId, itemId);
 
-        setupProdutoRepository.delete(item);
+        item.getSetup().removerProduto(item);
     }
 
     @Transactional(readOnly = true)
@@ -85,5 +92,20 @@ public class SetupProdutoService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Produto não encontrado neste setup."
                 ));
+    }
+
+    @Transactional(readOnly = true)
+    public List<SetupProdutoResponse> listarProdutos(Long setupId) {
+
+        if (!setupRepository.existsById(setupId)) {
+            throw new EntityNotFoundException(
+                    "Setup não encontrado: " + setupId
+            );
+        }
+
+        return setupProdutoRepository.findBySetupId(setupId)
+                .stream()
+                .map(setupProdutoMapper::toSetupProdutoResponse)
+                .toList();
     }
 }
