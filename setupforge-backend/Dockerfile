@@ -1,3 +1,4 @@
+
 # Etapa 1: compilação
 FROM maven:3.9-eclipse-temurin-17 AS build
 
@@ -17,4 +18,4 @@ COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8086
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["sh", "-c", "java -Dserver.port=${PORT:-8086} -jar app.jar"]
