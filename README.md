@@ -27,6 +27,14 @@ Para executar o frontend, não é necessário configurar um backend ou banco de 
 
 A URL base do backend identifica o serviço, mas não serve uma página inicial e pode responder HTTP 404. Use o health check ou os endpoints/documentação acima para verificar a API.
 
+### Endpoints principais
+
+| Método | Caminho | Uso |
+|---|---|---|
+| `GET` | `/actuator/health` | Estado de disponibilidade do serviço |
+| `GET` | `/categorias` | Categorias disponíveis no catálogo |
+| `GET` | `/produto` | Produtos do catálogo |
+
 ## Funcionalidades
 
 - Página inicial com banner, categorias e entrada para a montagem de computador.
@@ -64,7 +72,7 @@ Quando o Expo exibir o QR Code, escaneie-o com o Expo Go. Em iPhone, também é 
 npx expo start --web
 ```
 
-**CORS para Web:** o código local do backend permite `http://localhost:8081` e `http://localhost:8082`, além de origens explícitas configuradas em `CORS_ALLOWED_ORIGINS`. Isso só passa a valer no serviço público depois que a versão atualizada for publicada no Render. Até a publicação e o reteste, a versão atualmente publicada pode bloquear `localhost:8081`. A execução mobile via Expo Go consome a API diretamente e não depende do CORS do navegador.
+**CORS para Web:** o código local do backend permite `http://localhost:8081` e `http://localhost:8082`, além de origens explícitas configuradas em `CORS_ALLOWED_ORIGINS`. Na última verificação pública, o Render ainda permitia `localhost:8082` e rejeitava `localhost:8081`; a alteração local foi enviada ao GitHub, mas o novo comportamento ainda não está ativo no serviço publicado. A execução mobile via Expo Go consome a API diretamente e não depende do CORS do navegador.
 
 ## Backend (opcional, execução local)
 
@@ -72,13 +80,15 @@ O backend já está hospedado no Render e é consumido diretamente pelo frontend
 
 1. Inicie o PostgreSQL e crie um banco local para o projeto.
 2. Na pasta `setupforge-backend`, configure as variáveis de ambiente `DB_URL`, `DB_USERNAME` e `DB_PASSWORD`. Não use credenciais de produção nem as inclua no repositório.
-3. Inicie a aplicação:
+3. Para acesso Web local, configure `CORS_ALLOWED_ORIGINS` como uma lista separada por vírgulas, por exemplo `http://localhost:8081,http://localhost:8082`. Origens adicionais devem ser URLs completas e explícitas, sem `*`.
+4. Inicie a aplicação:
 
 ```bash
 cd setupforge-backend
 export DB_URL="jdbc:postgresql://localhost:5432/setupforge"
 export DB_USERNAME="<usuario-local>"
 export DB_PASSWORD="<senha-local>"
+export CORS_ALLOWED_ORIGINS="http://localhost:8081,http://localhost:8082"
 ./mvnw spring-boot:run
 ```
 
