@@ -1,8 +1,10 @@
 
 import { Stack } from 'expo-router';
+import { MontagemProvider } from '@/features/montagem/context/MontagemContext';
 
 export default function RootLayout() {
     return (
+      <MontagemProvider>
         <Stack
             screenOptions={{
                 headerShown: false,
@@ -11,5 +13,6 @@ export default function RootLayout() {
                 },
             }}
         />
+      </MontagemProvider>
     );
 }

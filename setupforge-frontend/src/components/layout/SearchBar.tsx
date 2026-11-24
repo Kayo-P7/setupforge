@@ -1,19 +1,28 @@
 
 import { Search } from 'lucide-react-native';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 interface SearchBarProps {
     value: string;
     onChangeText: (text: string) => void;
+    onSubmit: () => void;
 }
 
 export default function SearchBar({
                                       value,
                                       onChangeText,
+                                      onSubmit,
                                   }: SearchBarProps) {
     return (
         <View style={styles.container}>
-            <Search color="#999999" size={20} />
+            <Pressable
+                onPress={onSubmit}
+                accessibilityRole="button"
+                accessibilityLabel="Buscar produtos"
+                hitSlop={8}
+            >
+                <Search color="#999999" size={20} />
+            </Pressable>
 
             <TextInput
                 style={styles.input}
@@ -21,8 +30,10 @@ export default function SearchBar({
                 placeholderTextColor="#777777"
                 value={value}
                 onChangeText={onChangeText}
+                onSubmitEditing={onSubmit}
                 autoCapitalize="none"
                 returnKeyType="search"
+                accessibilityLabel="Buscar produtos"
             />
         </View>
     );

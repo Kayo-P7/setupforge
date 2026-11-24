@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class CategoriaController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     public ResponseEntity<CategoriaResponse> save(
-            @RequestBody CategoriaRequest categoriaRequest) {
+            @Valid @RequestBody CategoriaRequest categoriaRequest) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(categoriaService.save(categoriaRequest));
@@ -71,7 +72,7 @@ public class CategoriaController {
     public ResponseEntity<CategoriaResponse> update(
             @Parameter(description = "ID da categoria", example = "1")
             @PathVariable Long id,
-            @RequestBody CategoriaRequest categoriaRequest) {
+            @Valid @RequestBody CategoriaRequest categoriaRequest) {
 
         return ResponseEntity.ok(categoriaService.update(id, categoriaRequest));
     }
